@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Opportunity Update</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #d1ecf1; padding: 20px; border-radius: 5px; }
+        .content { padding: 20px; }
+        .footer { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 20px; }
+        .highlight { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Opportunity Update</h1>
+        </div>
+        
+        <div class="content">
+            <p>Dear {{ investor.first_name }} {{ investor.last_name }},</p>
+            
+            <p>We have an important update regarding your investment opportunity:</p>
+            
+            <div class="highlight">
+                <h2>{{ opportunity.title }}</h2>
+                <p><strong>Company:</strong> {{ opportunity.company_name }}</p>
+                <p><strong>Your Investment Amount:</strong> {{ investment.amount }} {{ investment.currency }}</p>
+                <p><strong>Current Status:</strong> {{ investment.status|title }}</p>
+            </div>
+            
+            <div class="highlight success">
+                <h3>📊 Updated Progress</h3>
+                <p><strong>Total Goal:</strong> {{ opportunity.total_goal }} {{ opportunity.currency }}</p>
+                <p><strong>Current Raised:</strong> {{ opportunity.current_raised }} {{ opportunity.currency }}</p>
+                <p><strong>Progress:</strong> {{ opportunity.progress_percentage|floatformat:1 }}%</p>
+                
+                {% if opportunity.is_funded %}
+                <p><strong>🎉 CONGRATULATIONS!</strong> This opportunity has been fully funded!</p>
+                {% elif opportunity.progress_percentage >= 75 %}
+                <p><strong>🚀 Great Progress!</strong> We're almost there! The opportunity is {{ opportunity.progress_percentage|floatformat:1 }}% funded.</p>
+                {% elif opportunity.progress_percentage >= 50 %}
+                <p><strong>📈 Good Progress!</strong> The opportunity is {{ opportunity.progress_percentage|floatformat:1 }}% funded.</p>
+                {% else %}
+                <p><strong>📊 Current Status:</strong> The opportunity is {{ opportunity.progress_percentage|floatformat:1 }}% funded.</p>
+                {% endif %}
+            </div>
+            
+            <h3>Key Updates:</h3>
+            <ul>
+                <li><strong>Deadline:</strong> {{ opportunity.deadline|date:"F j, Y, g:i a" }}</li>
+                <li><strong>Status:</strong> {{ opportunity.status|title }}</li>
+                {% if opportunity.is_expired %}
+                <li><strong>⚠️ Note:</strong> This opportunity has expired</li>
+                {% endif %}
+            </ul>
+            
+            {% if investment.status == 'pending' %}
+            <div class="highlight">
+                <h3>💰 Payment Reminder</h3>
+                <p>If you haven't completed your payment yet, please send {{ investment.amount }} {{ investment.currency }} to your assigned wallet address.</p>
+                {% if investor.wallet %}
+                <p><strong>Wallet Address:</strong> {{ investor.wallet.address }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <h3>What's Next?</h3>
+            <ul>
+                <li>Monitor the progress of this opportunity</li>
+                <li>You'll receive updates on any significant changes</li>
+                <li>Once the opportunity is fully funded, you'll receive final confirmation</li>
+                <li>If you have any questions, contact our support team</li>
+            </ul>
+            
+            <p>Thank you for your participation in this investment opportunity!</p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Best regards,</strong><br>
+            Bitcoin Treasury Investment Team</p>
+            <p><small>This is an automated update. Please do not reply to this email.</small></p>
+        </div>
+    </div>
+</body>
+</html> 
